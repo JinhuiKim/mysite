@@ -23,6 +23,48 @@ public class UserDao {
 		return conn;
 	}
 	
+	public UserVo get( Long userNo ){
+		UserVo vo = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try{
+			conn = getConnection();
+			
+			String sql = "select no, name, gender from users where no = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong( 1, userNo );
+			rs = pstmt.executeQuery();
+			if( rs.next() ) {
+				Long no = rs.getLong( 1 );
+				String name = rs.getString( 2 );
+				String gender = rs.getString( 3 );
+				
+				vo = new UserVo();
+				vo.setNo(no);
+				vo.setName(name);
+				vo.setGender(gender);
+			}
+			
+		} catch( SQLException e ) {
+			e.printStackTrace();
+		} finally {
+			try{
+				if( pstmt != null ) {
+					pstmt.close();
+				}
+				if( conn != null ) {
+					conn.close();
+				}
+			} catch( SQLException e ) {
+				e.printStackTrace();
+			}
+		}
+		
+		return vo;
+	}
+	
 	public UserVo get( String email, String password ){
 		UserVo vo = null;
 		Connection conn = null;
