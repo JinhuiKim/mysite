@@ -8,16 +8,7 @@
 </head>
 <body>
 	<div id="container">
-		<div id="header">
-			<h1>MySite</h1>
-			<ul>
-				<li><a href="">로그인</a><li>
-				<li><a href="">회원가입</a><li>
-				<li><a href="">회원정보수정</a><li>
-				<li><a href="">로그아웃</a><li>
-				<li>님 안녕하세요 ^^;</li>
-			</ul>
-		</div>
+		<jsp:include page="/WEB-INF/views/include/header.jsp"/>
 		<div id="content">
 			<div id="board" class="board-form">
 				<table class="tbl-ex">
@@ -45,16 +36,8 @@
 				</div>
 			</div>
 		</div>
-		<div id="navigation">
-			<ul>
-				<li><a href="">안대혁</a></li>
-				<li><a href="">방명록</a></li>
-				<li><a href="">게시판</a></li>
-			</ul>
-		</div>
-		<div id="footer">
-			<p>(c)opyright 2014 </p>
-		</div>
+		<jsp:include page="/WEB-INF/views/include/navi.jsp"/>
+		<jsp:include page="/WEB-INF/views/include/footer.jsp"/>
 	</div>
 </body>
 </html>
