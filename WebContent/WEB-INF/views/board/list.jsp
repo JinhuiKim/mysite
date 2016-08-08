@@ -49,6 +49,19 @@
 						<td><a href="" class="del">삭제</a></td>
 					</tr>
 				</table>
+				<!-- begin:paging -->
+				<div class="pager">
+					<ul>
+						<li><a href="">◀</a></li>
+						<li><a href="">1</a></li>
+						<li class="selected">2</li>
+						<li><a href="">3</a></li>
+						<li><a href="">4</a></li>
+						<li><a href="">5</a></li>
+						<li><a href="">▶</a></li>
+					</ul>
+				</div>
+				<!-- end:paging -->				
 				<div class="bottom">
 					<a href="" id="new-book">글쓰기</a>
 				</div>				
