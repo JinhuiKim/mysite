@@ -1,6 +1,7 @@
 <%@page import="kr.ac.sungkyul.mysite.vo.UserVo"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+	String result = request.getParameter( "res" );
 	UserVo userVo = (UserVo)request.getAttribute( "userVo" );
 %>
 <!doctype html>
@@ -9,6 +10,15 @@
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <link href="/mysite/assets/css/user.css" rel="stylesheet" type="text/css">
+<script>
+	<%
+		if( "success".equals( result ) ) {
+	%>
+		alert( "성공적으로 수정하였습니다." );
+	<%
+		}
+	%>
+</script>
 </head>
 <body>
 	<div id="container">

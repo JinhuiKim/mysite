@@ -43,6 +43,6 @@ public class ModifyAction implements Action {
 		UserDao dao = new UserDao();
 		dao.update( vo );
 		
-		WebUtil.redirect("/mysite/user?a=modifyform", request, response);
+		WebUtil.redirect("/mysite/user?a=modifyform&res=success", request, response);
 	}
 }
