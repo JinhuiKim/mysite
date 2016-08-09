@@ -1,8 +1,7 @@
-<%@page import="kr.ac.sungkyul.mysite.vo.UserVo"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>  
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-	UserVo authUser = (UserVo)session.getAttribute( "authUser" );
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +11,7 @@
 </head>
 <body>
 	<div id="container">
-		<jsp:include page="/WEB-INF/views/include/header.jsp"/>
+		<c:import url='/WEB-INF/views/include/header.jsp'/>
 		<div id="content">
 			<div id="board">
 				<form id="search_form" action="" method="post">
@@ -27,31 +26,27 @@
 						<th>조회수</th>
 						<th>작성일</th>
 						<th>&nbsp;</th>
-					</tr>				
-					<tr>
-						<td>3</td>
-						<td><a href="">세 번째 글입니다.</a></td>
-						<td>안대혁</td>
-						<td>3</td>
-						<td>2015-10-11 12:04:20</td>
-						<td><a href="" class="del">삭제</a></td>
 					</tr>
-					<tr>
-						<td>2</td>
-						<td><a href="">두 번째 글입니다.</a></td>
-						<td>안대혁</td>
-						<td>3</td>
-						<td>2015-10-02 12:04:12</td>
-						<td><a href="" class="del">삭제</a></td>
-					</tr>
-					<tr>
-						<td>1</td>
-						<td><a href="">첫 번째 글입니다.</a></td>
-						<td>안대혁</td>
-						<td>3</td>
-						<td>2015-09-25 07:24:32</td>
-						<td><a href="" class="del">삭제</a></td>
-					</tr>
+					<c:set var='totalCount' value='${fn:length(list) }'/>
+					<c:forEach var='vo' items='${list }' varStatus='status'>				
+						<tr>
+							<td>${totalCount - status.index }</td>
+							<td><a href="">${vo.title }</a></td>
+							<td>${vo.userName }</td>
+							<td>${vo.viewCount }</td>
+							<td>${vo.regDate }</td>
+							<td>
+								<c:choose>
+									<c:when test='${not empty authUser && authUser.no == vo.userNo }'>
+										<a href="" class="del">삭제</a>
+									</c:when>
+									<c:otherwise>
+										&nbsp;
+									</c:otherwise>
+								</c:choose>
+							</td>
+						</tr>
+					</c:forEach>
 				</table>
 				<!-- begin:paging -->
 				<div class="pager">
@@ -67,18 +62,14 @@
 				</div>
 				<!-- end:paging -->
 				<div class="bottom">
-					<%
-						if( authUser != null ) {
-					%>
-					<a href="/mysite/board?a=writeform" id="new-book">글쓰기</a>
-					<%
-						}
-					%>
+					<c:if test='${not empty authUser }'>
+						<a href="/mysite/board?a=writeform" id="new-book">글쓰기</a>
+					</c:if>
 				</div>				
 			</div>
 		</div>
-		<jsp:include page="/WEB-INF/views/include/navi.jsp"/>
-		<jsp:include page="/WEB-INF/views/include/footer.jsp"/>
+		<c:import url='/WEB-INF/views/include/navi.jsp'/>
+		<c:import url='/WEB-INF/views/include/footer.jsp'/>
 	</div>
 </body>
 </html>
