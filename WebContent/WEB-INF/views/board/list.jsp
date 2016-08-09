@@ -1,4 +1,8 @@
+<%@page import="kr.ac.sungkyul.mysite.vo.UserVo"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+	UserVo authUser = (UserVo)session.getAttribute( "authUser" );
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -61,9 +65,15 @@
 						<li><a href="">▶</a></li>
 					</ul>
 				</div>
-				<!-- end:paging -->				
+				<!-- end:paging -->
 				<div class="bottom">
-					<a href="" id="new-book">글쓰기</a>
+					<%
+						if( authUser != null ) {
+					%>
+					<a href="/mysite/board?a=writeform" id="new-book">글쓰기</a>
+					<%
+						}
+					%>
 				</div>				
 			</div>
 		</div>

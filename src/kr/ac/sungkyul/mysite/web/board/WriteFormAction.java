@@ -9,11 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 import kr.ac.sungkyul.web.Action;
 import kr.ac.sungkyul.web.WebUtil;
 
-public class ListAction implements Action {
+public class WriteFormAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		WebUtil.forward("/WEB-INF/views/board/list.jsp", request, response);
+		WebUtil.forward("/WEB-INF/views/board/write.jsp", request, response);
 	}
-
 }
