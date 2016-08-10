@@ -31,7 +31,7 @@
 					<c:forEach var='vo' items='${list }' varStatus='status'>				
 						<tr>
 							<td>${totalCount - status.index }</td>
-							<td><a href="">${vo.title }</a></td>
+							<td><a href="/mysite/board?a=view&no=${vo.no }">${vo.title }</a></td>
 							<td>${vo.userName }</td>
 							<td>${vo.viewCount }</td>
 							<td>${vo.regDate }</td>

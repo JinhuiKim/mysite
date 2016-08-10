@@ -24,6 +24,77 @@ public class BoardDao {
 		return conn;
 	}
 	
+	public void updateViewCount( Long no ) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = getConnection();
+			
+			String sql = "update board set view_count = view_count + 1 where no = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, no);
+			pstmt.executeUpdate();
+
+		} catch( SQLException e ) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if( pstmt != null ) {
+					pstmt.close();
+				}
+				if( conn != null ) {
+					conn.close();
+				}
+			} catch( SQLException e ) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public BoardVo get( Long no ) {
+		BoardVo vo = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = getConnection();
+			
+			String sql = "select no, title, content from board where no = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, no);
+			rs = pstmt.executeQuery();
+			
+			if( rs.next() ) {
+				vo = new BoardVo();
+				vo.setNo( rs.getLong(1) );
+				vo.setTitle( rs.getString(2) );
+				vo.setContent( rs.getString(3) );
+			}
+			
+		} catch( SQLException e ) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if( rs != null ) {
+					rs.close();
+				}
+				if( pstmt != null ) {
+					pstmt.close();
+				}
+				if( conn != null ) {
+					conn.close();
+				}
+			} catch( SQLException e ) {
+				e.printStackTrace();
+			}
+		}
+		
+		return vo;
+	}
+	
 	public List<BoardVo> getList() {
 		List<BoardVo> list = new ArrayList<BoardVo>();
 		
