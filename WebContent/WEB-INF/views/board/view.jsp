@@ -36,8 +36,8 @@
 				</table>
 				<div class="bottom">
 					<a href="/mysite/board">글목록</a>
-					<c:if test='${not empty authUser }'>
-						<a href="/mysite/board?a=modify&no=${vo.no }">글수정</a>
+					<c:if test='${not empty authUser && authUser.no == vo.userNo }'>
+						<a href="/mysite/board?a=modifyform&no=${vo.no }">글수정</a>
 					</c:if>
 				</div>
 			</div>

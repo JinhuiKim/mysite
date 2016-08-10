@@ -24,6 +24,39 @@ public class BoardDao {
 		return conn;
 	}
 	
+	public void update( BoardVo vo ) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = getConnection();
+			
+			String sql =
+				"update board set title = ?, content= ? where no = ? and user_no = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, vo.getTitle() );
+			pstmt.setString(2, vo.getContent() );
+			pstmt.setLong(3, vo.getNo() );
+			pstmt.setLong(4, vo.getUserNo() );
+			
+			pstmt.executeUpdate();
+
+		} catch( SQLException e ) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if( pstmt != null ) {
+					pstmt.close();
+				}
+				if( conn != null ) {
+					conn.close();
+				}
+			} catch( SQLException e ) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public void updateViewCount( Long no ) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -61,7 +94,7 @@ public class BoardDao {
 		try {
 			conn = getConnection();
 			
-			String sql = "select no, title, content from board where no = ?";
+			String sql = "select no, title, content, user_no from board where no = ?";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setLong(1, no);
@@ -72,6 +105,7 @@ public class BoardDao {
 				vo.setNo( rs.getLong(1) );
 				vo.setTitle( rs.getString(2) );
 				vo.setContent( rs.getString(3) );
+				vo.setUserNo( rs.getLong(4) );	
 			}
 			
 		} catch( SQLException e ) {
@@ -95,7 +129,47 @@ public class BoardDao {
 		return vo;
 	}
 	
-	public List<BoardVo> getList() {
+	public int getTotalCount(){
+		
+		int totalCount = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = getConnection();
+			
+			String sql = "select count(*) from board";
+			pstmt = conn.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+			
+			if( rs.next() ) {
+				totalCount = rs.getInt( 1 );
+			}
+			
+		} catch( SQLException e ) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if( rs != null ) {
+					rs.close();
+				}
+				if( pstmt != null ) {
+					pstmt.close();
+				}
+				if( conn != null ) {
+					conn.close();
+				}
+			} catch( SQLException e ) {
+				e.printStackTrace();
+			}
+		}
+		
+		return totalCount;		
+	}
+	
+	public List<BoardVo> getList( int page, int pagesize ) {
 		List<BoardVo> list = new ArrayList<BoardVo>();
 		
 		Connection conn = null;
@@ -104,14 +178,21 @@ public class BoardDao {
 		try {
 			conn = getConnection();
 			String sql =
-				"   SELECT a.no, a.title, b.name, b.no, a.view_count, to_char(reg_date, 'yyyy-mm-dd pm hh:mi:ss'), depth" +
-				"     FROM board a," +
-				"          users b" +
-				"    WHERE a.user_no = b.no" +
-				" ORDER BY group_no DESC, order_no ASC"; 
+				"SELECT * " +
+				"  FROM (SELECT c.*, rownum rn" +
+				"          FROM (  SELECT a.no, a.title, b.name, a.user_no, a.view_count, to_char(reg_date, 'yyyy-mm-dd pm hh:mi:ss'), depth" +
+				"                    FROM board a," +
+				"                         users b" +
+				"                   WHERE a.user_no = b.no" +
+				"                ORDER BY group_no DESC, order_no ASC) c )" +
+				" WHERE ?  <= rn" +
+				"   AND rn <= ?";
 			pstmt = conn.prepareStatement(sql);
-			
+
+			pstmt.setInt(1, (page-1)*pagesize + 1);
+			pstmt.setInt(2, page*pagesize);
 			rs = pstmt.executeQuery();
+			
 			while( rs.next() ) {
 				Long no = rs.getLong( 1 );
 				String title = rs.getString( 2 );

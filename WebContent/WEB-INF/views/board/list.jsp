@@ -51,13 +51,31 @@
 				<!-- begin:paging -->
 				<div class="pager">
 					<ul>
-						<li><a href="">◀</a></li>
-						<li><a href="">1</a></li>
-						<li class="selected">2</li>
-						<li><a href="">3</a></li>
-						<li><a href="">4</a></li>
-						<li><a href="">5</a></li>
-						<li><a href="">▶</a></li>
+						<c:if test="${prevPage > 0 }">
+							<li><a href="/mysite/board?a=list&p=${prevPage }">◀</a></li>
+						</c:if>						
+						<c:forEach 
+							begin='${firstPage }' 
+							end='${lastPage }' 
+							step='1' 
+							var='i'>
+							<c:choose>
+								<c:when test='${currentPage == i }'>
+									<li class="selected">${i }</li>
+								</c:when>
+								<c:when test='${i > pageCount }'>
+									<li>${i }</li>
+								</c:when>
+								
+								<c:otherwise>
+									<li><a href="/mysite/board?a=list&p=${i }">${i }</a></li>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+						
+						<c:if test='${nextPage > 0 }'>
+							<li><a href="/mysite/board?a=list&p=${nextPage }">▶</a></li>
+						</c:if>
 					</ul>
 				</div>
 				<!-- end:paging -->
