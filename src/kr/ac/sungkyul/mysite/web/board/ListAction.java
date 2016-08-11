@@ -13,7 +13,7 @@ import kr.ac.sungkyul.web.Action;
 import kr.ac.sungkyul.web.WebUtil;
 
 public class ListAction implements Action {
-	private final int LIST_PAGESIZE = 2; // 리스팅되는 게시물의 수
+	private final int LIST_PAGESIZE = 3; // 리스팅되는 게시물의 수
 	private final int LIST_BLOCKSIZE = 5; // 페이지 리스트에서 표시되는 페이지 수
 
 	@Override
@@ -54,6 +54,7 @@ public class ListAction implements Action {
 		List<BoardVo> list = dao.getList( page, LIST_PAGESIZE );
 
 		request.setAttribute( "sizeList",  LIST_PAGESIZE );
+		request.setAttribute( "totalCount",  totalCount );
 		request.setAttribute( "firstPage", startPage );
 		request.setAttribute( "lastPage", endPage );
 		request.setAttribute( "prevPage", prevPage );

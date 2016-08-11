@@ -27,10 +27,10 @@
 						<th>작성일</th>
 						<th>&nbsp;</th>
 					</tr>
-					<c:set var='totalCount' value='${fn:length(list) }'/>
+					<c:set var="firstIndex"	value="${totalCount - (currentPage - 1)*sizeList }" />	
 					<c:forEach var='vo' items='${list }' varStatus='status'>				
 						<tr>
-							<td>${totalCount - status.index }</td>
+							<td>${firstIndex - status.index }</td>
 							<td><a href="/mysite/board?a=view&no=${vo.no }">${vo.title }</a></td>
 							<td>${vo.userName }</td>
 							<td>${vo.viewCount }</td>
@@ -66,7 +66,6 @@
 								<c:when test='${i > pageCount }'>
 									<li>${i }</li>
 								</c:when>
-								
 								<c:otherwise>
 									<li><a href="/mysite/board?a=list&p=${i }">${i }</a></li>
 								</c:otherwise>
