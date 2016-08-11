@@ -14,8 +14,8 @@
 		<c:import url='/WEB-INF/views/include/header.jsp'/>
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="" method="post">
-					<input type="text" id="kwd" name="kwd" value="">
+				<form id="search_form" action="/mysite/board" method="get">
+					<input type="text" id="kwd" name="kwd" value="${keyword }">
 					<input type="submit" value="찾기">
 				</form>
 				<table class="tbl-ex">
@@ -57,7 +57,7 @@
 				<div class="pager">
 					<ul>
 						<c:if test="${prevPage > 0 }">
-							<li><a href="/mysite/board?a=list&p=${prevPage }">◀</a></li>
+							<li><a href="/mysite/board?a=list&p=${prevPage }&kwd=${keyword }">◀</a></li>
 						</c:if>						
 						<c:forEach 
 							begin='${firstPage }' 
@@ -72,13 +72,13 @@
 									<li>${i }</li>
 								</c:when>
 								<c:otherwise>
-									<li><a href="/mysite/board?a=list&p=${i }">${i }</a></li>
+									<li><a href="/mysite/board?a=list&p=${i }&kwd=${keyword }">${i }</a></li>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
 						
 						<c:if test='${nextPage > 0 }'>
-							<li><a href="/mysite/board?a=list&p=${nextPage }">▶</a></li>
+							<li><a href="/mysite/board?a=list&p=${nextPage }&kwd=${keyword }">▶</a></li>
 						</c:if>
 					</ul>
 				</div>

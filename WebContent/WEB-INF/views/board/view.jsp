@@ -29,7 +29,7 @@
 						<td class="label">내용</td>
 						<td>
 							<div class="view-content">
-								${fn:replace(vo.title, newLine, "<br>") }
+								${fn:replace(vo.content, newLine, "<br>") }
 							</div>
 						</td>
 					</tr>

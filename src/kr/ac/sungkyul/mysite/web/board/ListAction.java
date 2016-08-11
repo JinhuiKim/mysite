@@ -20,17 +20,20 @@ public class ListAction implements Action {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// 1. 페이지 파라미터 가져오기
-		int page = 1;
+		int page = 0;
 		String sPage = request.getParameter( "p" );
 		if( sPage != null && sPage.matches("-?\\d+(\\.\\d+)?") == true ){
 			page = Integer.parseInt( sPage );
 		}		
 		
+		// 2. 검색 kwd 파라미터 가져오기
+		String keyword = request.getParameter( "kwd" );
+		
 		// 2. Dao 생성
 		BoardDao dao = new BoardDao();
 		
 		// 3. 페이징을 위한 기본 데이터 세팅
-		int totalCount = dao.getTotalCount();
+		int totalCount = dao.getTotalCount( keyword );
 		int pageCount = (int)Math.ceil((double) totalCount / LIST_PAGESIZE);
 		int blockCount = (int) Math.ceil((double) pageCount / LIST_BLOCKSIZE);
 		int currentBlock = (int) Math.ceil((double) page / LIST_BLOCKSIZE);
@@ -51,7 +54,7 @@ public class ListAction implements Action {
 		int nextPage = (currentBlock < blockCount) ? currentBlock * LIST_BLOCKSIZE + 1 : 0;
 
 		//4. 리스트 가져오기
-		List<BoardVo> list = dao.getList( page, LIST_PAGESIZE );
+		List<BoardVo> list = dao.getList( page, LIST_PAGESIZE, keyword );
 
 		request.setAttribute( "sizeList",  LIST_PAGESIZE );
 		request.setAttribute( "totalCount",  totalCount );
@@ -61,6 +64,7 @@ public class ListAction implements Action {
 		request.setAttribute( "nextPage", nextPage );
 		request.setAttribute( "currentPage", page );
 		request.setAttribute( "pageCount", pageCount );
+		request.setAttribute( "keyword", keyword );
 		request.setAttribute( "list", list);
 		
 		WebUtil.forward("/WEB-INF/views/board/list.jsp", request, response);

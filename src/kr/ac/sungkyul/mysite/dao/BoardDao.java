@@ -192,7 +192,7 @@ public class BoardDao {
 		return vo;
 	}
 	
-	public int getTotalCount(){
+	public int getTotalCount( String keyword ){
 		
 		int totalCount = 0;
 		Connection conn = null;
@@ -202,9 +202,15 @@ public class BoardDao {
 		try {
 			conn = getConnection();
 			
-			String sql = "select count(*) from board";
+			String sql = ( null == keyword || "".equals(keyword) ) ? 
+				"select count(*) from board" :
+				"select count(*) from board where title like ? or content like ?";
 			pstmt = conn.prepareStatement(sql);
-
+			
+			if( null != keyword && "".equals(keyword) == false ) {
+				pstmt.setString( 1, "%"+keyword+ "%" );
+				pstmt.setString( 2, "%"+keyword+ "%" );
+			}
 			rs = pstmt.executeQuery();
 			
 			if( rs.next() ) {
@@ -232,7 +238,7 @@ public class BoardDao {
 		return totalCount;		
 	}
 	
-	public List<BoardVo> getList( int page, int pagesize ) {
+	public List<BoardVo> getList( int page, int pagesize, String keyword ) {
 		List<BoardVo> list = new ArrayList<BoardVo>();
 		
 		Connection conn = null;
@@ -240,7 +246,8 @@ public class BoardDao {
 		ResultSet rs = null;
 		try {
 			conn = getConnection();
-			String sql =
+			
+			String sql = ( null == keyword || "".equals(keyword) ) ? 
 				"SELECT * " +
 				"  FROM (SELECT c.*, rownum rn" +
 				"          FROM (  SELECT a.no, a.title, b.name, a.user_no, a.view_count, to_char(reg_date, 'yyyy-mm-dd pm hh:mi:ss'), depth" +
@@ -249,11 +256,30 @@ public class BoardDao {
 				"                   WHERE a.user_no = b.no" +
 				"                ORDER BY group_no DESC, order_no ASC) c )" +
 				" WHERE ?  <= rn" +
-				"   AND rn <= ?";
+				"   AND rn <= ?" :
+					
+				"SELECT * " +
+					"  FROM (SELECT c.*, rownum rn" +
+					"          FROM (  SELECT a.no, a.title, b.name, a.user_no, a.view_count, to_char(reg_date, 'yyyy-mm-dd pm hh:mi:ss'), depth" +
+					"                    FROM board a," +
+					"                         users b" +
+					"                   WHERE a.user_no = b.no" +
+					"                     AND (title like ? OR content like ?)" +
+					"                ORDER BY group_no DESC, order_no ASC) c )" +
+					" WHERE ?  <= rn" +
+					"   AND rn <= ?" ;
+			
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setInt(1, (page-1)*pagesize + 1);
-			pstmt.setInt(2, page*pagesize);
+			if( null == keyword || "".equals(keyword) ){
+				pstmt.setInt(1, (page-1)*pagesize + 1);
+				pstmt.setInt(2, page*pagesize);
+			} else {
+				pstmt.setString( 1, "%" + keyword + "%" );
+				pstmt.setString( 2, "%" + keyword + "%" );
+				pstmt.setInt(3, (page-1)*pagesize + 1);
+				pstmt.setInt(4, page*pagesize);
+			}
 			rs = pstmt.executeQuery();
 			
 			while( rs.next() ) {
