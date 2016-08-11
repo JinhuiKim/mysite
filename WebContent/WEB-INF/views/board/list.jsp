@@ -31,14 +31,19 @@
 					<c:forEach var='vo' items='${list }' varStatus='status'>				
 						<tr>
 							<td>${firstIndex - status.index }</td>
-							<td><a href="/mysite/board?a=view&no=${vo.no }">${vo.title }</a></td>
+							<td style="text-align:left;padding-left:${(vo.depth-1)*10 }px">
+								<c:if test='${vo.depth > 1 }' >
+									<img src="/mysite/assets/images/re3.png">
+								</c:if>
+								<a href="/mysite/board?a=view&no=${vo.no }&p=${currentPage }">${vo.title }</a>
+							</td>
 							<td>${vo.userName }</td>
 							<td>${vo.viewCount }</td>
 							<td>${vo.regDate }</td>
 							<td>
 								<c:choose>
 									<c:when test='${not empty authUser && authUser.no == vo.userNo }'>
-										<a href="" class="del">삭제</a>
+										<a href="/mysite/board?a=delete&no=${vo.no }&p=${currentPage }" class="del">삭제</a>
 									</c:when>
 									<c:otherwise>
 										&nbsp;

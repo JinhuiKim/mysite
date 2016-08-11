@@ -31,13 +31,38 @@ public class WriteAction implements Action {
 		
 		String title = request.getParameter( "title" );
 		String content = request.getParameter( "content" );
-	
+		
+		Long groupNo = null;
+		String sGourpNo = request.getParameter( "group_no" );
+		if( sGourpNo != null && sGourpNo.matches("-?\\d+(\\.\\d+)?") ){
+			groupNo = Long.parseLong( sGourpNo );
+		}
+		
+		Long orderNo = null;
+		String sOrderNo = request.getParameter( "order_no" );
+		if( sOrderNo != null && sOrderNo.matches("-?\\d+(\\.\\d+)?") ){
+			orderNo = Long.parseLong( sOrderNo ) + 1;
+		}
+
+
+		Integer depth = null;
+		String sDepth = request.getParameter( "depth" );
+		if( sDepth != null && sDepth.matches("-?\\d+(\\.\\d+)?") ){
+			depth = Integer.parseInt( sDepth ) + 1;
+		}
+		
 		BoardVo vo = new BoardVo();
 		vo.setTitle(title);
 		vo.setContent(content);
-		vo.setUserNo( authUser.getNo() );
-		
+		vo.setGroupNo(groupNo);
+		vo.setOrderNo(orderNo);
+		vo.setDepth(depth);
+		vo.setUserNo(authUser.getNo());
+	
 		BoardDao dao = new BoardDao();
+		if( groupNo != null ){ // 답글인 경우
+			dao.updateOrderNo(groupNo, orderNo );
+		}
 		dao.insert( vo );
 		
 		WebUtil.redirect("/mysite/board", request, response);
