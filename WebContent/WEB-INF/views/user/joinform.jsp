@@ -8,6 +8,73 @@
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <link href="/mysite/assets/css/user.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="/mysite/assets/js/jquery/jquery-1.9.0.js"></script>
+<script>
+$(function(){
+	$( "#join-form" ).submit( function() {
+		console.log( "폼 체크" );
+		
+		// 이름 체크
+		if( $( "#name" ).val() == "" ) {
+			alert( "이름은 필수 입력 항목입니다." );
+			$( "#name" ).focus();
+			return false;
+		}
+		
+		//이메일 체크
+		
+		
+		//패스워드
+		
+		
+		//약관 동의
+		
+		
+		console.log( "submit!!!" )
+		//return true;	
+		return false;
+	});
+	
+	$( "#email" ).change( function() {
+		$("#image-checked").hide();
+		$("#btn-checkemail").show();
+	});
+	
+	$( "#btn-checkemail" ).click( function(){
+		var email = $( "#email" ).val();
+		if( email == "") {
+			return;
+		}
+		$.ajax({
+			"url": "/mysite/user?a=checkemail&email=" + email,
+			"type": "get",
+			"dataType": "json",
+			"data": "",
+			"success": function(response) {
+				if( response.result == "fail" ) {
+					console.error( "error:" + response.message  );
+					return;
+				}
+				
+				if( response.data == true ) {
+					alert( "이미 존재하는 이메일입니다. 다른 이메일을 사용해 주세요" );
+					$("#email").
+					val( "" ).
+					focus();
+					return;
+				}
+				
+				$("#image-checked").show();
+				$("#btn-checkemail").hide();
+				
+			}, 
+			"error": function( jsXHR, status, e ) {
+				console.error( "error:" + status + ":" + e );
+			}
+		});
+	});
+});
+</script>
 </head>
 <body>
 	<div id="container">
@@ -21,7 +88,8 @@
 
 					<label class="block-label" for="email">이메일</label>
 					<input id="email" name="email" type="text" value="">
-					<input type="button" value="id 중복체크">
+					<img id="image-checked" style="width:16px;display:none" src="/mysite/assets/images/check.png"/>
+					<input type="button" id="btn-checkemail" value="id 중복체크">
 					
 					<label class="block-label">패스워드</label>
 					<input name="password" type="password" value="">
